@@ -33,22 +33,32 @@ export async function runPanel(input: z.infer<typeof inputSchema>) {
     };
   }
 
-  const result = await amICited({
-    domain,
-    queries: panel.queries,
-    engine: parsed.engine,
-  });
+  const CHUNK = 20;
+  const chunks: string[][] = [];
+  for (let i = 0; i < panel.queries.length; i += CHUNK) {
+    chunks.push(panel.queries.slice(i, i + CHUNK));
+  }
 
+  const perQuery: Array<{ query: string; cited: boolean; rank?: number; matching_urls: string[] }> = [];
+  let engineUsed = parsed.engine;
+  const fetchedAt = new Date().toISOString();
+  for (const queries of chunks) {
+    const res = await amICited({ domain, queries, engine: parsed.engine });
+    engineUsed = res.engine;
+    perQuery.push(...res.results);
+  }
+
+  const queriesCited = perQuery.filter((q) => q.cited).length;
   const snapshot = {
     panel: panel.name,
     domain,
-    engine: result.engine,
-    taken_at: result.fetched_at,
-    per_query: result.results,
+    engine: engineUsed,
+    taken_at: fetchedAt,
+    per_query: perQuery,
     summary: {
-      queries_total: result.summary.queries_total,
-      queries_cited: result.summary.queries_cited,
-      citation_rate: result.summary.citation_rate,
+      queries_total: perQuery.length,
+      queries_cited: queriesCited,
+      citation_rate: perQuery.length > 0 ? queriesCited / perQuery.length : 0,
     },
   };
   const path = await appendSnapshot(snapshot);
