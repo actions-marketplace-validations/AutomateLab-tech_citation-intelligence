@@ -1,6 +1,6 @@
 {
   "name": "@automatelab/citation-intelligence",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "mcpName": "io.github.AutomateLab-tech/citation-intelligence",
   "description": "What LLMs cite, for agents. MCP server: check what Perplexity, Claude, ChatGPT, Gemini, Bing, and Google AI Overviews cite for any query. Self-hosted, BYO API key.",
   "license": "MIT",
@@ -27,6 +27,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",
     "cheerio": "1.0.0",
+    "google-auth-library": "9.15.0",
     "undici": "7.25.0",
     "zod": "3.25.76"
   },

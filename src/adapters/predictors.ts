@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import { fetchJson, fetchText } from "../lib/fetch.js";
+import { fetchJson, fetchText, ToolFetchError } from "../lib/fetch.js";
 
 export type PredictorSignals = {
   wikipedia_linked: boolean;
@@ -102,9 +102,18 @@ export async function collectSignals(url: string): Promise<PredictorSignals> {
 
   let pageHtml = "";
   try {
-    const { text } = await fetchText(url, { timeoutMs: 15_000 });
+    const { text, status } = await fetchText(url, { timeoutMs: 15_000 });
+    if (status >= 400) {
+      throw new ToolFetchError({
+        type: "fetch_error",
+        url,
+        status,
+        message: `URL returned HTTP ${status} - cannot score a non-existent page.`,
+      });
+    }
     pageHtml = text;
-  } catch {
+  } catch (err) {
+    if (err instanceof ToolFetchError) throw err;
     pageHtml = "";
   }
 
