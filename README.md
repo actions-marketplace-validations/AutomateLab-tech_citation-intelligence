@@ -37,7 +37,7 @@ The AI citation tracking market is dominated by VC-funded dashboards starting at
 
 ## Tools
 
-Tools are grouped into six namespaces: `citations.*`, `domain.*`, `signals.*`, `panel.*`, `competitors.*`, `audit.*`. Names form a navigable tree — pick a namespace by the question you're asking.
+Tools are grouped into seven namespaces: `citations.*`, `domain.*`, `signals.*`, `panel.*`, `report.*`, `competitors.*`, `audit.*`. Names form a navigable tree — pick a namespace by the question you're asking.
 
 **Start with `citations.provenance` or `domain.am_i_cited`.** Single-engine results (`citations.check` with a pinned engine) are directional; multi-engine consensus is the honest signal. A URL cited by 4 of 5 engines is a very different finding than one cited by 1.
 
@@ -75,6 +75,12 @@ Tools are grouped into six namespaces: `citations.*`, `domain.*`, `signals.*`, `
 |---|---|
 | `panel.track` | Save / load / list named query panels (editorial watchlists) |
 | `panel.run` | Run a panel through `domain.am_i_cited` and snapshot to disk |
+
+### `report.*` — turnkey reporting artifacts
+
+| Tool | Purpose |
+|---|---|
+| `report.visibility` | One-call AI visibility report over a query set (or panel): citation rate (mention frequency), share of voice vs competitors, average rank, and brand sentiment. Returns structured data + a Markdown artifact for a public page. |
 
 ### `competitors.*` — competitive landscape per query
 
@@ -279,7 +285,7 @@ The Wikipedia signal is measured (it correlates with citation) but no "go get a 
 
 ## Workflow recipes
 
-Concrete patterns that compose the 24 tools into something useful. Costs assume ChatGPT or Perplexity at ~$0.01-0.03/query.
+Concrete patterns that compose the 26 tools into something useful. Costs assume ChatGPT or Perplexity at ~$0.01-0.03/query.
 
 ### 1. Weekly citation tracker
 

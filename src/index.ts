@@ -31,6 +31,7 @@ import {
 } from "./tools/predict-citation.js";
 import { trackQueries, trackQueriesInputSchema } from "./tools/track-queries.js";
 import { runPanel, runPanelInputSchema } from "./tools/run-panel.js";
+import { visibilityReport, visibilityReportInputSchema } from "./tools/visibility-report.js";
 import { citationTrend, citationTrendInputSchema } from "./tools/citation-trend.js";
 import { compareDomains, compareDomainsInputSchema } from "./tools/compare-domains.js";
 import { wikipediaMentions, wikipediaMentionsInputSchema } from "./tools/wikipedia-mentions.js";
@@ -62,6 +63,7 @@ import {
   predictCitationOutputShape,
   trackQueriesOutputShape,
   runPanelOutputShape,
+  visibilityReportOutputShape,
   citationTrendOutputShape,
   compareDomainsOutputShape,
   wikipediaMentionsOutputShape,
@@ -241,6 +243,24 @@ server.registerTool(
     },
   },
   (args) => wrapHandler(() => runPanel(args)),
+);
+
+server.registerTool(
+  "report.visibility",
+  {
+    description:
+      "Turnkey AI visibility report for a domain across a query set. Composes check_citations over every query (or a saved panel) and returns the metrics AI-visibility trackers sell as a dashboard, in one call: mention frequency (citation_rate), share_of_voice vs competitors, average rank when cited, and brand sentiment from the answer text. Side effects: one check_citations call per query (costs API quota for uncached queries; cached queries are free). Returns structured summary + top_domains + per_query, plus a rendered Markdown report (include_markdown=true) suitable for a public page. Provide queries[] or a panel name. Same engine selection as check_citations.",
+    inputSchema: visibilityReportInputSchema,
+    outputSchema: visibilityReportOutputShape,
+    annotations: {
+      title: "AI visibility report",
+      readOnlyHint: false,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: true,
+    },
+  },
+  (args) => wrapHandler(() => visibilityReport(args)),
 );
 
 server.registerTool(
@@ -589,6 +609,7 @@ log.info(
       "domain.cited_for_diff",
       "panel.track",
       "panel.run",
+      "report.visibility",
       "competitors.compare",
       "competitors.compete",
       "competitors.canonical_set",

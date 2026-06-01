@@ -154,6 +154,42 @@ export const runPanelOutputShape = {
 } as const;
 
 // ---------------------------------------------------------------------------
+// visibility_report
+// ---------------------------------------------------------------------------
+
+export const visibilityReportOutputShape = {
+  summary: z.object({
+    domain: z.string(),
+    engine: z.string(),
+    generated_at: z.string(),
+    queries_total: z.number(),
+    queries_cited: z.number(),
+    citation_rate: z.number().describe("Mention frequency: % of queries where the domain is cited."),
+    share_of_voice: z.number().describe("% of all cited sources across the query set that belong to the domain."),
+    average_rank: z.number().nullable().describe("Mean citation rank when cited (null if never cited)."),
+    average_sentiment: z.number().nullable().describe("Mean sentiment [-1,1] of answer text mentioning the brand (null if never mentioned)."),
+    sentiment_breakdown: z.object({ positive: z.number(), neutral: z.number(), negative: z.number() }),
+  }),
+  top_domains: z.array(z.object({
+    domain: z.string(),
+    citations: z.number(),
+    share: z.number().describe("Share of all citations, percent."),
+    is_target: z.boolean(),
+    is_competitor: z.boolean(),
+  })).describe("Share-of-voice table, most-cited domains first."),
+  per_query: z.array(z.object({
+    query: z.string(),
+    cited: z.boolean(),
+    rank: z.number().nullable(),
+    sentiment: z.number().nullable(),
+    sentiment_label: z.enum(["positive", "neutral", "negative", "n/a"]),
+    top_competitor: z.string().nullable(),
+  })),
+  markdown: z.string().optional().describe("Rendered Markdown report. Present when include_markdown=true."),
+  error: z.string().optional(),
+} as const;
+
+// ---------------------------------------------------------------------------
 // citation_trend
 // ---------------------------------------------------------------------------
 
