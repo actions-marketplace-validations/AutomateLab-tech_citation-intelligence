@@ -30,7 +30,7 @@ export async function claudeSearch(
 
   // System prompt approximates Claude.ai consumer behavior: search-first with citation list.
   const body = JSON.stringify({
-    model: "claude-sonnet-4-7",
+    model: "claude-sonnet-4-6",
     max_tokens: 1024,
     system: "You are a search assistant. Answer with inline citations. List each source URL you used.",
     tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 5 }],

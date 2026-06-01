@@ -3,7 +3,7 @@ import { fetchJson, ToolFetchError } from "../lib/fetch.js";
 import { log } from "../lib/log.js";
 import type { AdapterResult, Citation } from "../types.js";
 
-const OPENAI_MODEL = "gpt-4o";
+const OPENAI_MODEL = "gpt-4.1";
 
 type OpenAiResponsesResult = {
   output?: Array<{
