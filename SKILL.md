@@ -27,55 +27,55 @@ Pairs with the `@automatelab/citation-intelligence` server (12 tools across 6 na
 
 ## Tool namespaces
 
-### `citations.*` — query-level: who cites what
+### `citations_*` — query-level: who cites what
 
 | Tool | Use when |
 |---|---|
-| `citations.provenance` | **Start here.** Fan a query across engines; returns per-URL cross-engine consensus matrix |
-| `citations.check` | URLs cited by a single engine for a query (cheaper than provenance) |
-| `citations.evidence` | Extract the cited snippet — *why* a URL is cited, not just *that* it is |
-| `citations.predict` | Citation likelihood from public signals — no LLM fired |
-| `citations.trend` | Time-series citation rate + per-query gained/lost deltas |
-| `citations.freshness` | Recency score for pages an engine cites |
+| `citations_provenance` | **Start here.** Fan a query across engines; returns per-URL cross-engine consensus matrix |
+| `citations_check` | URLs cited by a single engine for a query (cheaper than provenance) |
+| `citations_evidence` | Extract the cited snippet — *why* a URL is cited, not just *that* it is |
+| `citations_predict` | Citation likelihood from public signals — no LLM fired |
+| `citations_trend` | Time-series citation rate + per-query gained/lost deltas |
+| `citations_freshness` | Recency score for pages an engine cites |
 
-### `domain.*` — domain-level: am I cited, what for
-
-| Tool | Use when |
-|---|---|
-| `domain.am_i_cited` | Fan across all engines for a domain; cross-engine consensus. Default first tool for "is my site cited?" |
-| `domain.cited_for` | Which queries the domain has been cited for (from local cache) |
-
-### `signals.*` — page-level: citation signals
+### `domain_*` — domain-level: am I cited, what for
 
 | Tool | Use when |
 |---|---|
-| `signals.ai_overview` | Google AI Overview eligibility check for a URL |
-| `signals.answer_box` | Featured snippet / answer box signals |
+| `domain_am_i_cited` | Fan across all engines for a domain; cross-engine consensus. Default first tool for "is my site cited?" |
+| `domain_cited_for` | Which queries the domain has been cited for (from local cache) |
 
-### `competitors.*`, `panel.*`, `audit.*` — tracking and comparison
+### `signals_*` — page-level: citation signals
 
 | Tool | Use when |
 |---|---|
-| `competitors.compare` | Compare citation coverage between your domain and a competitor |
-| `panel.run` | Run a batch of queries and aggregate citation results |
+| `signals_ai_overview` | Google AI Overview eligibility check for a URL |
+| `signals_answer_box` | Featured snippet / answer box signals |
+
+### `competitors_*`, `panel_*`, `audit_*` — tracking and comparison
+
+| Tool | Use when |
+|---|---|
+| `competitors_compare` | Compare citation coverage between your domain and a competitor |
+| `panel_run` | Run a batch of queries and aggregate citation results |
 
 ## Default workflows
 
 **"Is my site cited?"**
 ```
-domain.am_i_cited(domain: "example.com", engine: "auto")
+domain_am_i_cited(domain: "example.com", engine: "auto")
 → Per-engine breakdown + consensus. Pin engine= to reduce cost.
 ```
 
 **"Who ranks for this query?"**
 ```
-citations.provenance(query: "best n8n alternatives")
+citations_provenance(query: "best n8n alternatives")
 → Cross-engine URL matrix with interpretation notes
 ```
 
 **"Why does ChatGPT cite them and not me?"**
 ```
-citations.evidence(query: "...", url: "competitor.com/page")
+citations_evidence(query: "...", url: "competitor.com/page")
 → The cited snippet; compare against your page
 ```
 

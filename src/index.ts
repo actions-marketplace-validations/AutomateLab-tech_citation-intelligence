@@ -120,7 +120,7 @@ function wrapHandler<T>(handler: () => Promise<T>): Promise<ToolResponse> {
 }
 
 server.registerTool(
-  "citations.check",
+  "citations_check",
   {
     description:
       "Return URLs cited by an AI engine (Perplexity, Claude, ChatGPT, Gemini, or Bing) for a query. Use this when an agent or user wants to see what sources an AI search engine grounds answers on. Requires at least one engine API key; auto-picks the first available.",
@@ -138,7 +138,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "domain.am_i_cited",
+  "domain_am_i_cited",
   {
     description:
       "Check whether a domain is cited by an AI engine across a cluster of queries. Returns per-query presence, rank, and a citation-rate summary. Use to measure visibility for a brand, product, or content site in AI search.",
@@ -156,7 +156,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "signals.ai_overview",
+  "signals_ai_overview",
   {
     description:
       "Check whether Google shows an AI Overview for a query, and which URLs it cites. Uses SerpAPI (free tier: 100/month). Set SERPAPI_KEY.",
@@ -174,7 +174,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "domain.cited_for",
+  "domain_cited_for",
   {
     description:
       "List queries that the given domain has been cited for, served from the local cache. Build up a corpus by calling check_citations or am_i_cited first; cited_for queries it without spending API budget.",
@@ -192,7 +192,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "citations.predict",
+  "citations_predict",
   {
     description:
       "Score citation likelihood for a URL from public signals (Wikipedia link presence, schema.org markup, /llms.txt, GitHub and Reddit references, canonical hygiene, HTTPS). No LLM fired - all heuristic. Returns 0-100 score, grade, signal breakdown, and ranked fixes.",
@@ -210,7 +210,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "panel.track",
+  "panel_track",
   {
     description:
       "Save, load, or list named query panels. A panel is a persisted set of queries you want to monitor over time (e.g. editorial-watchlist). Use action=save with queries[] to create, action=load to read, action=list to enumerate. Panels live under <config>/panels/<name>.json.",
@@ -228,10 +228,10 @@ server.registerTool(
 );
 
 server.registerTool(
-  "panel.run",
+  "panel_run",
   {
     description:
-      "Run a saved panel through am_i_cited and append a timestamped snapshot. Side effects: makes external API calls to the configured AI engine (costs API quota); writes one snapshot file to disk at <config>/snapshots/<panel>/<iso>.json. Requires at least one engine API key (same as am_i_cited). Returns per-query citation presence and a citation_rate summary for the run. Use panel.track to create a panel first; use citations.trend to read the accumulated trend after multiple runs.",
+      "Run a saved panel through am_i_cited and append a timestamped snapshot. Side effects: makes external API calls to the configured AI engine (costs API quota); writes one snapshot file to disk at <config>/snapshots/<panel>/<iso>.json. Requires at least one engine API key (same as am_i_cited). Returns per-query citation presence and a citation_rate summary for the run. Use panel_track to create a panel first; use citations_trend to read the accumulated trend after multiple runs.",
     inputSchema: runPanelInputSchema,
     outputSchema: runPanelOutputShape,
     annotations: {
@@ -246,7 +246,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "report.visibility",
+  "report_visibility",
   {
     description:
       "Turnkey AI visibility report for a domain across a query set. Composes check_citations over every query (or a saved panel) and returns the metrics AI-visibility trackers sell as a dashboard, in one call: mention frequency (citation_rate), share_of_voice vs competitors, average rank when cited, and brand sentiment from the answer text. Side effects: one check_citations call per query (costs API quota for uncached queries; cached queries are free). Returns structured summary + top_domains + per_query, plus a rendered Markdown report (include_markdown=true) suitable for a public page. Provide queries[] or a panel name. Same engine selection as check_citations.",
@@ -264,10 +264,10 @@ server.registerTool(
 );
 
 server.registerTool(
-  "citations.trend",
+  "citations_trend",
   {
     description:
-      "Report citation rate over time for a panel from stored snapshots. Read-only; cache-only — makes no API calls to any AI engine and costs no API quota. Reads snapshot files from <config>/snapshots/<panel>/. Returns: snapshots[] (one entry per panel.run invocation, each with timestamp and citation_rate), plus per-query deltas (gained/lost/unchanged) comparing first vs last snapshot. Returns an empty series when no snapshots exist yet. No auth required. No rate limits. Use panel.run to accumulate snapshots first; use since to restrict the time window.",
+      "Report citation rate over time for a panel from stored snapshots. Read-only; cache-only — makes no API calls to any AI engine and costs no API quota. Reads snapshot files from <config>/snapshots/<panel>/. Returns: snapshots[] (one entry per panel_run invocation, each with timestamp and citation_rate), plus per-query deltas (gained/lost/unchanged) comparing first vs last snapshot. Returns an empty series when no snapshots exist yet. No auth required. No rate limits. Use panel_run to accumulate snapshots first; use since to restrict the time window.",
     inputSchema: citationTrendInputSchema,
     outputSchema: citationTrendOutputShape,
     annotations: {
@@ -282,7 +282,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "competitors.compare",
+  "competitors_compare",
   {
     description:
       "Run predict_citation on 2-10 URLs and return a side-by-side signal table plus a list of signals where the URLs diverge. Use to compare your URL to top-cited competitors for the same query.",
@@ -300,7 +300,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "signals.wikipedia",
+  "signals_wikipedia",
   {
     description:
       "List Wikipedia articles that reference the given domain. Read-only. One HTTPS GET to the Wikipedia API (en.wikipedia.org/w/api.php?action=query&list=exturlusage). No auth required; no API keys; no rate limits beyond Wikipedia's public API fair-use policy (~1 request/second). Returns article titles and URLs. Wikipedia backlinks are the highest-lift signal for LLM training corpora — a domain cited from Wikipedia is far more likely to appear in AI training data and citation pools. Use lang to query non-English Wikipedias.",
@@ -318,7 +318,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "audit.sitemap",
+  "audit_sitemap",
   {
     description:
       "Fetch a sitemap.xml (or sitemap index) and run predict_citation on every URL. Returns results sorted worst-score-first. Surfaces systemic issues across a whole site in one pass. Zero engine keys needed.",
@@ -336,7 +336,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "competitors.compete",
+  "competitors_compete",
   {
     description:
       "End-to-end competitive snapshot for a single query. Calls check_citations to get the cited URLs, then runs compare_domains on your_url vs the top cited competitors. Returns your score, the average competitor score, and the gap.",
@@ -354,7 +354,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "citations.freshness",
+  "citations_freshness",
   {
     description:
       "Score how recent the pages cited for a query are. Calls check_citations, then collects dateModified for each cited URL, returns a 0-100 recency_score (halflife=365d) plus per-URL freshness bucket (fresh/current/stale/ancient/unknown). Surfaces queries where AI cites old content - opportunity to ship fresher.",
@@ -372,7 +372,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "domain.cited_for_diff",
+  "domain_cited_for_diff",
   {
     description:
       "Diff cited_for between two time windows for a domain. Returns queries gained (cited now, not before baseline_until) and queries lost (cited before, not since current_since). Cache-only, no API spend. Use to track citation drift over time after publishing or migrating content.",
@@ -390,7 +390,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "signals.gsc_gap",
+  "signals_gsc_gap",
   {
     description:
       "Join Google Search Console performance with am_i_cited per query. Surfaces queries where the domain ranks well in Google but is not cited in AI - the closest editorial wins. Requires GCP service account creds (credentials_path or GOOGLE_APPLICATION_CREDENTIALS env).",
@@ -408,7 +408,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "signals.bing_gap",
+  "signals_bing_gap",
   {
     description:
       "Join Bing Webmaster Tools query stats with am_i_cited per query. Surfaces queries where the domain ranks well in Bing but is not cited in AI - the closest editorial wins. Bing's index backs Copilot/ChatGPT/Perplexity grounding, so a Bing rank gap is an LLM-citation gap. Requires BING_WEBMASTER_API_KEY (Bing Webmaster Tools -> Settings -> API Access).",
@@ -426,7 +426,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "audit.schema",
+  "audit_schema",
   {
     description:
       "Deep schema.org validation for a URL. Parses every JSON-LD block and microdata node, checks required fields per @type (Article needs headline+author+datePublished, FAQPage needs mainEntity, HowTo needs step, etc.), and flags missing fields and malformed JSON-LD. Returns issues list and a valid/invalid verdict. Use to fix structured-data bugs that predict_citation flags but can't explain.",
@@ -444,7 +444,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "audit.llms_txt",
+  "audit_llms_txt",
   {
     description:
       "Generate an llms.txt file (https://llmstxt.org spec) from a sitemap. Parses sitemap.xml + nested indexes, groups URLs by top-level path, and emits a Markdown document with H1+description+sectioned link lists. Set fetch_titles=true to pull <title> per URL (slower, richer output).",
@@ -462,7 +462,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "signals.answer_box",
+  "signals_answer_box",
   {
     description:
       "Locate where each cited URL appears in the AI's raw answer text. Calls check_citations, finds the first mention of each citation's URL (or hostname) in raw_answer, and bins by char position into early/middle/late thirds. Surfaces whether your URL is cited up-front or buried near the end. Returns 'unknown' for engines without raw_answer (Bing, Brave).",
@@ -480,7 +480,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "citations.provenance",
+  "citations_provenance",
   {
     description:
       "Fan a query out across multiple AI engines and report per-URL cross-engine consensus. Returns each unique cited URL with the list of engines that cited it, plus a consensus_urls list (URLs cited by ALL engines). High engine_count = strong cross-engine citation signal; engine_count=1 = engine-specific.",
@@ -498,7 +498,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "citations.evidence",
+  "citations_evidence",
   {
     description:
       "Extract the cited snippet from the AI engine's raw answer for each citation. Calls check_citations, then for each returned URL finds the first mention in raw_answer and returns a context window plus the nearest quoted span or containing sentence. Use to see *why* an engine cited a URL, not just *that* it did. Returns 'not found' for engines without raw_answer (Bing, Brave).",
@@ -516,7 +516,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "audit.crawler_access",
+  "audit_crawler_access",
   {
     description:
       "Verify that major AI crawlers (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, CCBot, Google-Extended, Applebot-Extended, Bytespider, Meta-ExternalAgent, plus real-time fetch UAs) can fetch a URL. Parses robots.txt and does a live GET with each bot's User-Agent. Surfaces robots.txt blocks AND UA-based gating that breaks AI citation.",
@@ -534,7 +534,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "audit.sitemap_map",
+  "audit_sitemap_map",
   {
     description:
       "Cross-reference a sitemap with the citation cache. For each sitemap URL, reports whether it appears in cached citations (and how many queries/engines cited it). Inverse of audit_sitemap: not 'how citable is each URL', but 'has each URL actually been cited yet'. Cache must be primed via check_citations or run_panel first.",
@@ -552,7 +552,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "competitors.canonical_set",
+  "competitors_canonical_set",
   {
     description:
       "Fan a query across engines and aggregate citations by registered domain (not URL). Returns top competitor domains ranked by cross-engine consensus, with per-engine breakdown and top URLs per domain. Use to identify the canonical competitor set for a query - the domains every engine treats as authoritative.",
@@ -570,7 +570,7 @@ server.registerTool(
 );
 
 server.registerTool(
-  "audit.structured_data",
+  "audit_structured_data",
   {
     description:
       "Suggest missing JSON-LD additions for a URL. Fetches the page, detects existing schema types, and returns ready-to-paste templates for types that are missing but signalled by page content (BlogPosting from og:type=article or bylines, FAQPage from Q&A pairs, HowTo from numbered steps, BreadcrumbList from nested paths, Organization on homepages). Templates are pre-filled from page metadata where possible; fields marked FILL: require manual completion.",
@@ -598,39 +598,39 @@ log.info(
     version: SERVER_VERSION,
     log_level: log.level(),
     tools: [
-      "citations.check",
-      "citations.predict",
-      "citations.trend",
-      "citations.provenance",
-      "citations.evidence",
-      "citations.freshness",
-      "domain.am_i_cited",
-      "domain.cited_for",
-      "domain.cited_for_diff",
-      "panel.track",
-      "panel.run",
-      "report.visibility",
-      "competitors.compare",
-      "competitors.compete",
-      "competitors.canonical_set",
-      "signals.ai_overview",
-      "signals.answer_box",
-      "signals.wikipedia",
-      "signals.gsc_gap",
-      "signals.bing_gap",
-      "audit.sitemap",
-      "audit.sitemap_map",
-      "audit.crawler_access",
-      "audit.schema",
-      "audit.llms_txt",
-      "audit.structured_data",
+      "citations_check",
+      "citations_predict",
+      "citations_trend",
+      "citations_provenance",
+      "citations_evidence",
+      "citations_freshness",
+      "domain_am_i_cited",
+      "domain_cited_for",
+      "domain_cited_for_diff",
+      "panel_track",
+      "panel_run",
+      "report_visibility",
+      "competitors_compare",
+      "competitors_compete",
+      "competitors_canonical_set",
+      "signals_ai_overview",
+      "signals_answer_box",
+      "signals_wikipedia",
+      "signals_gsc_gap",
+      "signals_bing_gap",
+      "audit_sitemap",
+      "audit_sitemap_map",
+      "audit_crawler_access",
+      "audit_schema",
+      "audit_llms_txt",
+      "audit_structured_data",
     ],
     prompts: [
-      "audit.citation_readiness",
-      "audit.competitor_snapshot",
-      "audit.crawler_checkup",
-      "audit.gap_analysis",
-      "audit.sitemap_coverage",
+      "audit_citation_readiness",
+      "audit_competitor_snapshot",
+      "audit_crawler_checkup",
+      "audit_gap_analysis",
+      "audit_sitemap_coverage",
     ],
     resources: [
       "citation://cache/summary",

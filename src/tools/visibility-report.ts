@@ -20,7 +20,7 @@ export const visibilityReportInputSchema = {
   panel: z
     .string()
     .optional()
-    .describe("Name of a saved panel (see panel.track) to pull queries from. Provide this OR `queries`."),
+    .describe("Name of a saved panel (see panel_track) to pull queries from. Provide this OR `queries`."),
   competitors: z
     .array(z.string().min(1))
     .max(20)

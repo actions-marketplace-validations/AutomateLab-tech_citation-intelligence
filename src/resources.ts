@@ -205,8 +205,8 @@ const CRAWLERS_PRIMER = [
   "",
   "## Audit",
   "",
-  "Use `audit.crawler_access` to verify these can each fetch a URL. Use the",
-  "`audit.crawler_checkup` prompt for an LLM-driven write-up.",
+  "Use `audit_crawler_access` to verify these can each fetch a URL. Use the",
+  "`audit_crawler_checkup` prompt for an LLM-driven write-up.",
 ].join("\n");
 
 export function registerResources(server: McpServer): void {
@@ -231,7 +231,7 @@ export function registerResources(server: McpServer): void {
     {
       title: "Saved panels",
       description:
-        "List of saved query panels and per-panel snapshot counts. Mirrors panel.track action=list with snapshot context.",
+        "List of saved query panels and per-panel snapshot counts. Mirrors panel_track action=list with snapshot context.",
       mimeType: "application/json",
     },
     async (uri) => {
@@ -266,7 +266,7 @@ export function registerResources(server: McpServer): void {
     {
       title: "AI crawlers cheatsheet",
       description:
-        "Quick reference for the AI crawlers `audit.crawler_access` checks, grouped by training vs real-time fetch.",
+        "Quick reference for the AI crawlers `audit_crawler_access` checks, grouped by training vs real-time fetch.",
       mimeType: "text/markdown",
     },
     (uri) => ({
@@ -288,7 +288,7 @@ export function registerResources(server: McpServer): void {
     {
       title: "Citations for a domain",
       description:
-        "Cached citations for {domain}. Returns the most recent 200 entries. Same source as domain.cited_for tool, surfaced as a resource for clients that subscribe.",
+        "Cached citations for {domain}. Returns the most recent 200 entries. Same source as domain_cited_for tool, surfaced as a resource for clients that subscribe.",
       mimeType: "application/json",
     },
     async (uri, variables) => {

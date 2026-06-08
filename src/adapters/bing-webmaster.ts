@@ -1,5 +1,5 @@
 // Bing Webmaster Tools (BWT) adapter - site-level query stats for the
-// signals.bing_gap tool. Bing's index backs Copilot, ChatGPT, and Perplexity
+// signals_bing_gap tool. Bing's index backs Copilot, ChatGPT, and Perplexity
 // grounding, so a Bing rank gap is an LLM-citation gap.
 //
 // Auth: BING_WEBMASTER_API_KEY. Generate it in Bing Webmaster Tools ->

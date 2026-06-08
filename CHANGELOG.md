@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.12.0 - 2026-06-08
+
+**Breaking:** MCP wire names no longer use dots. Anthropic's Messages API (and MCP clients that forward tool definitions to it — Claude Desktop, Claude Code, Zed, etc.) reject tool names outside `^[a-zA-Z0-9_-]{1,64}$`. Dotted names loaded the server but failed on first tool invocation with HTTP 400.
+
+All 26 tools and 5 prompts renamed: namespace separator is now `_` instead of `.`. Semantics unchanged.
+
+| Before (≤0.11.0) | After (≥0.12.0) |
+|---|---|
+| `citations.check` | `citations_check` |
+| `citations.predict` | `citations_predict` |
+| `citations.trend` | `citations_trend` |
+| `citations.provenance` | `citations_provenance` |
+| `citations.evidence` | `citations_evidence` |
+| `citations.freshness` | `citations_freshness` |
+| `domain.am_i_cited` | `domain_am_i_cited` |
+| `domain.cited_for` | `domain_cited_for` |
+| `domain.cited_for_diff` | `domain_cited_for_diff` |
+| `panel.track` | `panel_track` |
+| `panel.run` | `panel_run` |
+| `report.visibility` | `report_visibility` |
+| `competitors.compare` | `competitors_compare` |
+| `competitors.compete` | `competitors_compete` |
+| `competitors.canonical_set` | `competitors_canonical_set` |
+| `signals.ai_overview` | `signals_ai_overview` |
+| `signals.answer_box` | `signals_answer_box` |
+| `signals.wikipedia` | `signals_wikipedia` |
+| `signals.gsc_gap` | `signals_gsc_gap` |
+| `signals.bing_gap` | `signals_bing_gap` |
+| `audit.sitemap` | `audit_sitemap` |
+| `audit.sitemap_map` | `audit_sitemap_map` |
+| `audit.crawler_access` | `audit_crawler_access` |
+| `audit.schema` | `audit_schema` |
+| `audit.llms_txt` | `audit_llms_txt` |
+| `audit.structured_data` | `audit_structured_data` |
+| `audit.citation_readiness` (prompt) | `audit_citation_readiness` |
+| `audit.competitor_snapshot` (prompt) | `audit_competitor_snapshot` |
+| `audit.crawler_checkup` (prompt) | `audit_crawler_checkup` |
+| `audit.gap_analysis` (prompt) | `audit_gap_analysis` |
+| `audit.sitemap_coverage` (prompt) | `audit_sitemap_coverage` |
+
+Fixes [#1](https://github.com/AutomateLab-tech/citation-intelligence/issues/1).
+
 ## 0.9.2 - 2026-05-26
 
 Two adapter regressions blocking real queries:
